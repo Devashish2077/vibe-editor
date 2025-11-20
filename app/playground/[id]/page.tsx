@@ -2,27 +2,51 @@
 
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { TemplateFileTree } from '@/modules/playground/components/playground-explorer';
+import { useFileExplorer } from '@/modules/playground/hooks/useFileExplorer';
 import { UsePlayground } from '@/modules/playground/hooks/usePlayground';
+import { TemplateFile } from '@/modules/playground/lib/path-to-json';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 import { useParams } from 'next/navigation'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const MainPlaygroundPage = () => {
     const {id} = useParams<{id:string}>();
 
     const {playgroundData, templateData, isLoading, error, saveTemplateData} = UsePlayground(id)
+    const {
+    setTemplateData,
+    setActiveFileId,
+    setPlaygroundId,
+    setOpenFiles,
+    activeFileId,
+    closeAllFiles,
+    closeFile,
+    openFile,
+    openFiles,
+    } = useFileExplorer()
 
-    console.log("templateData", templateData)
-    console.log("playgroundData", playgroundData)
+    useEffect(()=>{setPlaygroundId(id)},[id, setPlaygroundId])
 
-    const activeFile = "sample.txt"
+    useEffect(()=>{
+       if (templateData && !openFiles.length) {
+      setTemplateData(templateData);
+    }
+    },[templateData,setTemplateData,openFiles.length])
+
+    const activeFile = openFiles.find((file)=>file.id === activeFileId)
+    const hasUnsavedChanges = openFiles.some((file)=>file.hasUnsavedChanges)
+
+    const handleFileSelect = (file:TemplateFile){
+      openFile(file)
+    }
 
   return (
     <TooltipPortal>
       <>
       <TemplateFileTree
       data={templateData!}
-          onFileSelect={()=>{}}
+          onFileSelect={handleFileSelect}
           selectedFile={activeFile}
           title="File Explorer"
           onAddFile={()=>{}}
