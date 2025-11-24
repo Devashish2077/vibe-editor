@@ -25,9 +25,9 @@ import LoadingStep from "@/modules/playground/components/loader";
 import {PlaygroundEditor} from "@/modules/playground/components/playground-editor";
 import { TemplateFileTree } from "@/modules/playground/components/playground-explorer";
 import ToggleAI from "@/modules/playground/components/toggle-ai";
-import { useAISuggestions } from "@/modules/playground/hooks/useAISuggestion";
+import { useAiSuggestions } from "@/modules/playground/hooks/useAISuggestion";
 import { useFileExplorer } from "@/modules/playground/hooks/useFileExplorer";
-import { usePlayground } from "@/modules/playground/hooks/usePlayground";
+import { UsePlayground } from "@/modules/playground/hooks/usePlayground";
 import { findFilePath } from "@/modules/playground/lib";
 import {
   TemplateFile,
@@ -59,9 +59,9 @@ const MainPlaygroundPage = () => {
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
 
   const { playgroundData, templateData, isLoading, error, saveTemplateData } =
-    usePlayground(id);
+    UsePlayground(id);
 
-    const aiSuggestions = useAISuggestions();
+    const aiSuggestions = useAiSuggestions();
 
   const {
     setTemplateData,
